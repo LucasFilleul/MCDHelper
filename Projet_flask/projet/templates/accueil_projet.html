@@ -1,0 +1,119 @@
+{% extends "base_excerciseur.html" %}
+{% block styles %}
+{{ super() }}
+  <link rel="stylesheet" href= "{{url_for('static',filename='accueil_projet.css') }}"/>
+{% endblock %}
+  {% block contain %}
+
+  {% if current_user.login != username %}
+    <h1>Vous n'avez pas le droit d'accéder à cette page</h1>
+  {% else %}
+  <fieldset>
+    <legend>Mes Projets</legend>
+    <section class="projets">
+      {% if i!=1 %}
+      <a class="fleche" href="{{url_for('page_projets',username=current_user.login,n=n,i=i-1)}}">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      {% endif %}
+        {% for p in mesproj %}
+        <div id="mesproj">
+          <fieldset>
+            <legend>{{p.nomProj}}</legend>
+            <img src="{{url_for('static',filename='dossier.png')}}">
+          </fieldset>
+          <a href="{{ url_for('page_projet_perso',username = current_user.login,idProj=p.id) }}"><input class="btn btn-default" type="submit" value="Consulter"></a>
+          <a href="{{url_for('parametresProj',username=current_user.login,nomProj=p.nomProj)}}"><input class="btn btn-default" type="submit" value="Parametres"></a>
+          <a href="/projets/{{current_user.login}}/{{p.nomProj}}/quitter"><input class="btn btn-default" type="submit" value="Quitter"></a>
+          </div>
+        {% endfor %}
+        {% if droite2 %}
+        <a class="fleche" href="{{url_for('page_projets',username=current_user.login,n=n,i=i+1)}}">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        {% endif %}
+        </section>
+        <a href="{{ url_for('add_projets', username=current_user.login) }}"><input class="btn btn-success" type="submit" value="Ajouter un Projet" id="ajoutproj"></a>
+    </fieldset>
+    <fieldset>
+      <legend>Tous les projets</legend>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        {% if message!= "Please log in to access this page." %}
+          <li>{{ message }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      {% from "_formhelpers.html" import render_field %}
+      <div id=search>
+      <form method=post>
+      {{ render_field(form.search) }}
+      <input class="btn btn-default" type=submit value=Search>
+      </form>
+      <script>
+$(document).ready(function(){
+    $(".btn-success").click(function(){
+        $(".collapse").collapse('show');
+        document.getElementById("pro").style.flexWrap="wrap";
+        document.getElementById("moins").style.display='block';
+        document.getElementById("voirplus").style.display='none';
+    });
+    $(".btn-warning").click(function(){
+        $(".collapse").collapse('hide');
+        document.getElementById("pro").style.flexWrap="nowrap";
+        document.getElementById("voirplus").style.display='block';
+        document.getElementById("moins").style.display='none';
+    });
+});
+</script>
+      <section class="projets " id="pro">
+        {% if search %}
+        {% for i in range(tousproj|length) %}
+        {% if i<(4) %}
+        <div id="tousproj">
+          <a href="{{url_for('description',username=current_user.login,nomProj=tousproj[i].nomProj)}}">
+            <img src="{{url_for('static',filename='dossier.png')}}">
+            <h4>{{tousproj[i].nomProj}}</h4>
+          </a>
+        </div>
+        {% else %}
+        <div id="tousproj" class="collapse" >
+          <a href="{{url_for('description',username=current_user.login,nomProj=tousproj[i].nomProj)}}">
+            <img src="{{url_for('static',filename='dossier.png')}}">
+            <h4>{{tousproj[i].nomProj}}</h4>
+          </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        {% if n!=1 %}
+        <a class="fleche" href="{{url_for('page_projets',username=current_user.login,n=n-1,i=i)}}">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        {% endif %}
+        {% for p in tousproj %}
+        <div id="tousproj">
+          <a href="{{url_for('description',username=current_user.login,nomProj=p.nomProj)}}">
+            <img src="{{url_for('static',filename='dossier.png')}}">
+            <h4>{{p.nomProj}}</h4>
+          </a>
+        </div>
+        {% endfor %}
+        {% if droite %}
+        <a class="fleche" href="{{url_for('page_projets',username=current_user.login,n=n+1,i=i)}}">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        {% endif %}
+        {% endif %}
+      </section>
+      </fieldset>
+      {% if search %}
+      <button id="voirplus" type="button" class="btn btn-success">Voir Plus</button>
+      <button id="moins" type="button" class="btn btn-warning">Moins</button>
+      {% endif %}
+      {% endif %}
+  {% endblock %}

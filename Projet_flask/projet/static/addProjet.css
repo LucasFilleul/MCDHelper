@@ -1,0 +1,27 @@
+#membres{
+  display: block;
+}
+#log,#droit{
+  display: inline-block;
+  margin-bottom:0.5em;
+}
+#log{
+  margin-left: 2em;
+}
+#droit>label{
+  margin-left: 2em;
+}
+form{
+  margin-left: 1em;
+}
+#retour{
+  color:white;
+  background-color: black;
+  border-radius: 10px;
+  padding: 0.5em;
+  margin-left: 1em;
+}
+#retour>input{
+  background-color: black;
+  border-style: none;
+}

@@ -1,0 +1,57 @@
+{% extends "base_excerciseur.html" %}
+{% block styles %}
+{{ super() }}
+  <link rel="stylesheet" href= "{{url_for('static',filename='new_relation.css') }}"/>
+{% endblock %}
+{% block contain %}
+{% if current_user.login != username %}
+  <h1>Vous n'avez pas le droit d'accéder à cette page</h1>
+{% else %}
+  <fieldset class="fieldset">
+    <legend>Nouveau MCD</legend>
+      {% for elem in relations %}
+      <section id="relations">
+      <a href="{{ url_for('delete_relation', username=username, idProj=idProj, idRel=elem.id ) }}"><button class="suppBout btn btn-danger" type="button">X</button></a>
+      <p>Relation <b>{{elem.nomRelation}}</b> entre
+      {% for ent in entites %}
+        {% if ent.relation_id==elem.id %}
+          <b>{{ent.entite.nomEntite}}</b>,
+        {% endif %}
+        {% endfor %}
+        avec le(s) attribut(s):
+        {% for att in attributs %}
+          {% if att.relation_id==elem.id %}
+            {% for a1 in a %}
+              {% if att.attribut_id==a1.id %}
+                  <b>{{a1.nomAttribut}}</b>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+
+      {% endfor %}
+      </p>
+    </section>
+      {% endfor %}
+    <a href="{{ url_for('page_creer_relation', username=username, idProj=idProj ) }}"><button type="button" class="btn btn-info">Ajouter relation</button></a>
+
+
+    <section>
+      <section>
+        <label><i>Vous pouvez ajouter ici toutes les relations que vous allez utiliser dans votre MCD qui peut contenir des attributs</i></label>
+      </section>
+    <a href="{{url_for('page_projet_perso',username=username,idProj=idProj)}}"><button class="btn btn-warning" role="button">Annuler</button></a>
+    <a href="{{url_for('consulter',username=username,idProj=idProj)}}"><button class="btn btn-success" type="submit">Valider</button></a>
+
+    </section>
+
+
+  </fieldset>
+
+  <script>
+  function supprimer(id){
+    console.log(id);
+    location.reload();
+  }
+  </script>
+{% endif %}
+{% endblock %}

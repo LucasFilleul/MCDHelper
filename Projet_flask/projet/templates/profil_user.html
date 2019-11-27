@@ -1,0 +1,69 @@
+{% extends "base_excerciseur.html" %}
+
+{% block styles %}
+{{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='profil.css') }}">
+{% endblock %}
+{% block contain %}
+{% if current_user.login != username %}
+  <h1>Vous n'avez pas le droit d'accéder à cette page</h1>
+{% else %}
+{% if sujet == 'accueil' %}
+
+<div class="container">
+  <div class="panel panel-default">
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+    <h2> Informations personnels</h2>
+		{% if user.image == None %}
+    <div class="row">
+			<div class="col-6 col-lg-4">
+					<img src="{{ url_for('static', filename='images/User/' + (user.image | string))}}" alt="Image non chargée">
+			</div>
+
+      <div id='struct' class="col-6 col-lg-4">
+				<p>Nom : {% if user.nom == None %}Pas de nom{% else %}{{user.nom}}{% endif %}</p>
+				<p>Prénom : {% if user.prenom == None %}Pas de prénom{% else %}{{user.prenom}}{% endif %}</p>
+				<p>Mail : {{user.mail}}</p>
+				{% if current_user.is_authenticated %}
+				<form class="form-listing" method="POST" action="{{ url_for('editer_compte')}}">
+					<p class = "edit"><button type="submit">Editer</button></p
+				</form>
+				{% endif %}
+      </div>
+			{% else %}
+			<div class="row">
+				<div class="col-6 col-lg-4">
+					<img src="{{ url_for('static', filename='images/User/' + (user.image | string))}}" alt="Image non chargée">	</div>
+	 			<div class="col-6 col-lg-4">
+						<p>Nom : {% if user.nom == None %}Pas de nom{% else %}{{user.nom}}{% endif %}</p>
+						<p>Prénom : {% if user.prenom == None %}Pas de prénom{% else %}{{user.prenom}}{% endif %}</p>
+						<p>Mail : {{user.mail}}</p>
+						{% if current_user.is_authenticated %}
+						<form class="form-listing" method="POST" action="{{ url_for('editer_compte')}}">
+							<p class = "edit"><button type="submit">Editer</button></p>
+						</form>
+						{% endif %}
+					</div>
+    	</div>
+  	</div>
+ 	{% endif %}
+	</div>
+</div>
+{% elif sujet == 'edit' %}
+<h2>Edition du compte</h2>
+<form id='test' class="formentry" role="form" enctype="multipart/form-data" method="POST" action="{{ url_for('save_compte') }}">
+  {{ form.hidden_tag() }}
+  <div id='test_bis' class="form-group">
+    {{ form.nom.label}}{{form.nom(class_="from-control")}}<br>
+    {{ form.prenom.label}}{{form.prenom(class_="from-control")}}<br>
+    <div id="photo">
+        {{ form.photo.label}}{{form.photo(accept=".jpg",id="photo")}}<br> <img src="{{ url_for('static', filename='images/User/' + (user.image | string))}}">
+  </div>
+  </div>
+  <input class="btn btn-success" type="submit" value="Valider">
+</form>
+{% else %}
+{% endif %}
+{% endif %}
+{% endblock %}

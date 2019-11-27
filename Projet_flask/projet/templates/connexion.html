@@ -1,0 +1,43 @@
+{% extends "bootstrap/base.html" %} <!-- extends pour unifier l'ensemble de nos pages pour avoir la même stucture -->
+{% block title %} {{ title }} {% endblock %} <!-- block title pour le titre de notre page -->
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet"
+  href="{{ url_for ('static', filename ='base.css') }}"/> <!-- Intégration du premier ficher .css se trouvant dans
+  le dossier static -->
+
+<link rel="stylesheet"
+  href="{{ url_for ('static', filename ='base2.css') }}"/> <!-- Intégration du second ficher .css se trouvant dans
+  le dossier static -->
+{% endblock %}
+
+{% block matas %} <!-- block metas pour définir le type d'encodage-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  </head>
+{% endblock %}
+
+{% block content %} <!-- block principal -->
+  <body>
+
+    <h1> {{title}} </h1>
+
+    <div class="container">
+      <form class="form-signin" role="form" method="POST" enctype="multipart/form-data" action="{{ url_for('connexion')}}">
+        <h2 class="form-signin-heading">Connexion</h2>
+      			{{ form.hidden_tag() }}
+      			<div class="form-group">
+      				{{ form.login.label(class="sr-only")}}{{form.login(size=50, class_="from-control", id="inputPassword", placeholder="Login")}}<br>
+      				{{ form.password.label(class="sr-only")}}{{form.password(size=50, class_="from-control", id="inputPassword", placeholder="Mot de passe")}}<br>
+      			</div>
+      			<input class="formentrybutton" type="submit" value="Ajouter le morceau">
+       </form>
+
+    </div> <!-- /container -->
+  </body>
+{% endblock %}
+</html>
